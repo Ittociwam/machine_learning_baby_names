@@ -2,30 +2,7 @@ import os
 import csv
 import tmdbsimple as tmdb
 import re
-import json
-import requests
 
-
-
-# start_year = 1940
-# this_year = 2016
-#
-# func(x, y)
-#
-# for year from start year to this_year
-#   actors = []
-#   character_names = []
-#   top_x_movies[] = top x movies from year
-#   for movie in top_x_movies
-#     actors += movie.actors
-#     character_names += movie.char_names
-#
-#   for name in actors, character_names
-#     for year in range(y)(ex. year-5 to year+5)
-# 	for file_name in files
-# 		if file_name has year
-# 			for baby_names in file
-# 				is baby_name in name
 
 class MovieNameStudy:
 
@@ -45,9 +22,6 @@ class MovieNameStudy:
                 for j in self.name_results[i].occurances:
                     print("\t", j, self.name_results[i].occurances[j])
                 print("MOVIES: ", self.name_results[i].movies)
-                for k in self.name_results[i].movies:
-                    print(k)
-                    print("\t", k, self.name_results[i].movies[k])
 
     class Name:
         def __init__(self, name, year, num):
@@ -123,4 +97,4 @@ class MovieNameStudy:
 
 
 
-MovieNameStudy(1975, 5, 3)
+MovieNameStudy(2000, 4, 3)
