@@ -2,6 +2,7 @@ import os
 import csv
 import tmdbsimple as tmdb
 import re
+from pprint import pprint
 
 
 class MovieNameStudy:
@@ -19,9 +20,10 @@ class MovieNameStudy:
         for i in self.name_results:
             if self.name_results[i].movies:
                 print(i)
-                for j in self.name_results[i].occurances:
-                    print("\t", j, self.name_results[i].occurances[j])
-                print("MOVIES: ", self.name_results[i].movies)
+                pprint(self.name_results[i].occurances)
+                # for j in self.name_results[i].occurances:
+                #     print("\t", j, self.name_results[i].occurances[j])
+                print("Movies containing", i, '\n', self.name_results[i].movies, "\n")
 
     class Name:
         def __init__(self, name, year, num):
@@ -68,7 +70,7 @@ class MovieNameStudy:
 
 
     def get_cast_names(self):
-        # Get the  top movies for a year (10 per page)
+        # Get the top movies for a year (10 per page)
         kwargs = {'primary_release_year':self.year, 'page':'1'}
         disc_obj = tmdb.Discover()
         top = disc_obj.movie(**kwargs)
@@ -97,4 +99,4 @@ class MovieNameStudy:
 
 
 
-MovieNameStudy(2000, 4, 3)
+MovieNameStudy(1950, 3, 3)
