@@ -3,15 +3,21 @@ import csv
 import tmdbsimple as tmdb
 import re
 from pprint import pprint
+import matplotlib.pyplot as plt
+import matplotlib.axes as axes
+import datetime
+from matplotlib.dates import YearLocator
+
 
 
 class MovieNameStudy:
 
-    def __init__(self, year, span, pages):
+    def __init__(self, year, span, pages=1):
+        print("Passed in ", year, span)
         tmdb.API_KEY = 'e026cff454ca0e6e446e959e87c05bcf'
-        self.year = year
-        self.span = span
-        self.pages = pages
+        self.year = int(year)
+        self.span = int(float(span))
+        self.pages = int(pages)
         self.name_results = {}
         self.get_names()
 
@@ -20,22 +26,41 @@ class MovieNameStudy:
         for i in self.name_results:
             if self.name_results[i].movies:
                 print(i)
-                pprint(self.name_results[i].occurances)
-                # for j in self.name_results[i].occurances:
-                #     print("\t", j, self.name_results[i].occurances[j])
+                pprint(self.name_results[i].occurrences)
                 print("Movies containing", i, '\n', self.name_results[i].movies, "\n")
+                display = self.name_results[i]
 
+
+        #for data_dict in display.occurrences:
+        x = []
+        y = []
+        for key, value in display.occurrences.items():
+            x.append(int(key))
+            y.append(int(value))
+        #plt.xticks()
+        print("x: ", x, "y: ", y)
+        plt.scatter(x, y)
+        plt.title(display.name + ' - ' + str(display.movies))
+        print(min(x), max(x))
+        ax = plt.gca()
+        ax.get_xaxis().get_major_formatter().set_useOffset(False)
+        plt.draw()
+        #plt.axis([min(x), max(x), min(y), max(y)])
+        plt.xlabel("Year")
+        plt.ylabel("Occurrences")
+        #plt.legend(display.occurrences.keys())
+        plt.show()
     class Name:
         def __init__(self, name, year, num):
             self.name = name
-            self.occurances = {year: num}
+            self.occurrences = {year: num}
             self.movies = {}
 
         def add_year(self, add_year, num):
-            if add_year in self.occurances:
-                self.occurances[add_year] = int(self.occurances[add_year]) + int(num)
+            if add_year in self.occurrences:
+                self.occurrences[add_year] = int(self.occurrences[add_year]) + int(num)
             else:
-                self.occurances[add_year] = num
+                self.occurrences[add_year] = num
 
 
     def count_instances(self, movie_name, names_list):
@@ -97,6 +122,4 @@ class MovieNameStudy:
 
 
 
-
-
-MovieNameStudy(1950, 3, 3)
+MovieNameStudy(1990, 3, 3)
