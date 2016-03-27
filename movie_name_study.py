@@ -9,35 +9,38 @@ import datetime
 from matplotlib.dates import YearLocator
 
 
-
 class MovieNameStudy:
-
-    def __init__(self, year, span, pages=1):
+    def __init__(self, year, span, name_to_graph, pages=1, ):
         print("Passed in ", year, span)
         tmdb.API_KEY = 'e026cff454ca0e6e446e959e87c05bcf'
         self.year = int(year)
         self.span = int(float(span))
         self.pages = int(pages)
+        self.name_to_graph = str(name_to_graph)
         self.name_results = {}
         self.get_names()
-
-
         self.get_cast_names()
+
         for i in self.name_results:
             if self.name_results[i].movies:
                 print(i)
                 pprint(self.name_results[i].occurrences)
                 print("Movies containing", i, '\n', self.name_results[i].movies, "\n")
-                display = self.name_results[i]
+                if i == self.name_to_graph:
+                    self.display_name(self.name_results[i])
+                    # display = self.name_results[i]
 
 
-        #for data_dict in display.occurrences:
+
+                    # for data_dict in display.occurrences:
+
+    def display_name(self, display):
         x = []
         y = []
         for key, value in display.occurrences.items():
             x.append(int(key))
             y.append(int(value))
-        #plt.xticks()
+        # plt.xticks()
         print("x: ", x, "y: ", y)
         plt.scatter(x, y)
         plt.title(display.name + ' - ' + str(display.movies))
@@ -45,15 +48,25 @@ class MovieNameStudy:
         ax = plt.gca()
         ax.get_xaxis().get_major_formatter().set_useOffset(False)
         plt.draw()
-        #plt.axis([min(x), max(x), min(y), max(y)])
+        # plt.axis([min(x), max(x), min(y), max(y)])
         plt.xlabel("Year")
         plt.ylabel("Occurrences")
-        #plt.legend(display.occurrences.keys())
+        # plt.legend(display.occurrences.keys())
         plt.show()
+
     class Name:
-        def __init__(self, name, year, num):
+        def __init__(self, name, year, num, span, movie_year):
             self.name = name
+            year = int(year)
             self.occurrences = {year: num}
+            self.span = int(span)
+            for i in range(movie_year - self.span, movie_year + self.span):
+                if year == i:
+                    continue
+                else:
+                    self.occurrences[i] = 0
+
+            # self.occurrences = {year: num}
             self.movies = {}
 
         def add_year(self, add_year, num):
@@ -61,7 +74,6 @@ class MovieNameStudy:
                 self.occurrences[add_year] = int(self.occurrences[add_year]) + int(num)
             else:
                 self.occurrences[add_year] = num
-
 
     def count_instances(self, movie_name, names_list):
         # Store the names and num of babies born with that name for every name that showed up in the movie
@@ -74,7 +86,7 @@ class MovieNameStudy:
 
     # Read in the csv and put the names and their counts for that year into a dict
     def get_names(self):
-        for i_year in (range(self.year - self.span, self.year + (self.span+ 1))):
+        for i_year in (range(self.year - self.span, self.year + (self.span + 1))):
             path = os.getcwd()
             file_path = path + '/names/yob' + str(i_year) + '.csv'
             if os.path.exists(file_path):
@@ -85,18 +97,15 @@ class MovieNameStudy:
                     if name[0] in self.name_results:
                         self.name_results[name[0]].add_year(i_year, name[2])
                     else:
-                        self.name_results[name[0]] = self.Name(name[0], i_year, name[2])
-                    #print(name)
-
-
+                        self.name_results[name[0]] = self.Name(name[0], i_year, name[2], self.span, self.year)
+                        # print(name)
 
     def has_numbers(self, input):
         return bool(re.search(r'\d', input))
 
-
     def get_cast_names(self):
         # Get the top movies for a year (10 per page)
-        kwargs = {'primary_release_year':self.year, 'page':'1'}
+        kwargs = {'primary_release_year': self.year, 'page': '1'}
         disc_obj = tmdb.Discover()
         top = disc_obj.movie(**kwargs)
         movies = top['results']
@@ -122,4 +131,4 @@ class MovieNameStudy:
 
 
 
-MovieNameStudy(1990, 3, 3)
+            # MovieNameStudy(2001, 8, 3)
