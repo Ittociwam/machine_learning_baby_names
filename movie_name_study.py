@@ -4,6 +4,8 @@ import tmdbsimple as tmdb
 import re
 from pprint import pprint
 import matplotlib.pyplot as plt
+import numpy as np
+from collections import OrderedDict
 import matplotlib.axes as axes
 import datetime
 from matplotlib.dates import YearLocator
@@ -23,16 +25,32 @@ class MovieNameStudy:
 
         for i in self.name_results:
             if self.name_results[i].movies:
-                print(i)
-                pprint(self.name_results[i].occurrences)
-                print("Movies containing", i, '\n', self.name_results[i].movies, "\n")
-                if i == self.name_to_graph:
-                    self.display_name(self.name_results[i])
-                    # display = self.name_results[i]
+                if self.is_interesting(self.name_results[i]):
+                    print(i)
+                    pprint(self.name_results[i].occurrences)
+                    print("Movies containing", i, '\n', self.name_results[i].movies, "\n")
+                    if i == self.name_to_graph:
+                        self.display_name(self.name_results[i])
+                        # display = self.name_results[i]
 
 
 
                     # for data_dict in display.occurrences:
+
+    def is_interesting(self, name):
+        #print(name.occurrences)
+        occ = list(name.occurrences.values())
+        #print(occ)
+        #normalized_values = (occ - np.mean(occ)) / np.std(occ)
+       # variance = np.std(normalized_values) / np.mean(normalized_values)
+        variance = np.std(occ) / np.mean(occ)
+        #print("vales before: ", occ, "values standardized: ", normalized_values, "the variance normalized: ", variance, "the varianced non normalized: ", variance2)
+        if variance > 0.1 and np.mean(occ) > self.span:
+            print(np.mean(occ))
+            return True
+        else:
+            return False
+
 
     def display_name(self, display):
         x = []
@@ -58,6 +76,7 @@ class MovieNameStudy:
         def __init__(self, name, year, num, span, movie_year):
             self.name = name
             year = int(year)
+            num = int(num)
             self.occurrences = {year: num}
             self.span = int(span)
             for i in range(movie_year - self.span, movie_year + self.span):
@@ -70,6 +89,7 @@ class MovieNameStudy:
             self.movies = {}
 
         def add_year(self, add_year, num):
+            num = int(num)
             if add_year in self.occurrences:
                 self.occurrences[add_year] = int(self.occurrences[add_year]) + int(num)
             else:
@@ -82,7 +102,8 @@ class MovieNameStudy:
             try:
                 self.name_results[name].movies[movie_name] = self.year
             except KeyError:
-                print(name, "not used")
+                # print(name, "not used")
+                a = 4
 
     # Read in the csv and put the names and their counts for that year into a dict
     def get_names(self):
@@ -131,4 +152,4 @@ class MovieNameStudy:
 
 
 
-            # MovieNameStudy(2001, 8, 3)
+#MovieNameStudy(2010, 4, 3)
