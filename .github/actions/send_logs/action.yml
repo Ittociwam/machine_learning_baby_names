@@ -1,0 +1,18 @@
+name: 'Send Log to Port API'
+description: 'Send a log message to Port API'
+inputs:
+  runId:
+    description: 'Port Job Run ID'
+    required: true
+  message:
+    description: 'Log message to send'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        curl -X POST "https://api.getport.io/v1/actions/${{ inputs.runId }}/logs" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer ${{ secrets.PORT_API_KEY }}" \
+        -d "{\"message\": \"${{ inputs.message }}\"}"
+      shell: bash
