@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Print Inputs
         run: |
-          echo "Port Context: ${{ github.event.inputs.port_context }}"
+          echo "Port Context: ${{ github.event.inputs.runId }}"
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
