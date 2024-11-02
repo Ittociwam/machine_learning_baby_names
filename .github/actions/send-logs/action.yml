@@ -16,6 +16,6 @@ runs:
     - run: |
         curl -X POST "https://api.getport.io/v1/actions/runs/${{ inputs.runId }}/logs" \
         -H "Content-Type: application/json" \
-        -H "Authorization: ${{ inputs.portApiKey }}" \
+        -H "Authorization: Bearer ${{ inputs.portApiKey }}" \
         -d '{"message": "${{ inputs.message }}"}'
       shell: bash
