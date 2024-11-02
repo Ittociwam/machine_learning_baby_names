@@ -28,6 +28,7 @@ jobs:
         with:
           runId: ${{ github.event.inputs.runId }}
           message: "Code checkout step completed successfully. Repository: ${{ github.repository }}, Branch: ${{ github.ref }}"
+          portApiKey: ${{ secrets.PORT_API_KEY }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -39,3 +40,4 @@ jobs:
         with:
           runId: ${{ github.event.inputs.runId }}
           message: "SonarCloud Scan step completed successfully."
+          portApiKey: ${{ secrets.PORT_API_KEY }}

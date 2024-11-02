@@ -7,12 +7,15 @@ inputs:
   message:
     description: 'Log message to send'
     required: true
+  portApiKey:
+    description: 'Port API Key'
+    required: true
 runs:
   using: 'composite'
   steps:
     - run: |
         curl -X POST "https://api.getport.io/v1/actions/${{ inputs.runId }}/logs" \
         -H "Content-Type: application/json" \
-        -H "Authorization: Bearer ${{ secrets.PORT_API_KEY }}" \
+        -H "Authorization: Bearer ${{ inputs.portApiKey }}" \
         -d "{\"message\": \"${{ inputs.message }}\"}"
       shell: bash
