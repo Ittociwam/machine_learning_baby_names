@@ -9,12 +9,8 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
-      port_context:
-        description: 'Port Context'
-        required: true
-        type: string
-      another_input:
-        description: 'Another Input'
+      runId:
+        description: 'Port Job Run ID'
         required: false
         type: string
 
@@ -29,7 +25,6 @@ jobs:
       - name: Print Inputs
         run: |
           echo "Port Context: ${{ github.event.inputs.port_context }}"
-          echo "Another Input: ${{ github.event.inputs.another_input }}"
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
