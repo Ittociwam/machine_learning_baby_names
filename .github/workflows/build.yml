@@ -1,3 +1,19 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - staging
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      runId:
+        description: 'Port Job Run ID'
+        required: false
+        type: string
+
 jobs:
   sonarcloud:
     name: SonarCloud
