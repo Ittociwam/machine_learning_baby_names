@@ -32,6 +32,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         continue-on-error: true
       - name: Send Logs to Port API
+        if: ${{ inputs.runId }}
         run: |
           tail -f /dev/null | while read -r line; do
             curl -X POST "https://api.getport.io/v1/actions/${{ github.event.inputs.runId }}/logs" \
