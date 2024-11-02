@@ -14,8 +14,8 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        curl -X POST "https://api.getport.io/v1/actions/${{ inputs.runId }}/logs" \
+        curl -X POST "https://api.getport.io/v1/actions/runs/${{ inputs.runId }}/logs" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer ${{ inputs.portApiKey }}" \
-        -d "{\"message\": \"${{ inputs.message }}\"}"
+        -d '{"message": "${{ inputs.message }}"}'
       shell: bash
