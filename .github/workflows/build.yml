@@ -25,14 +25,14 @@ jobs:
       - name: Print Inputs
         run: |
           echo "Port Context: ${{ github.event.inputs.runId }}"
-      - name: SonarCloud Scan + Save Logs
-        run: |
-          mkdir -p logs
-          echo "Running Sonar Scan"
-          SonarSource/sonarcloud-github-action@master > logs/scanoutput.log
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: |
+            > logs/scanoutput.log 2>&1
       - name: Send Logs to Port API
         if: ${{ inputs.runId }}
         run: |
