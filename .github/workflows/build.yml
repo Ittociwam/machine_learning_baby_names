@@ -13,25 +13,28 @@ on:
         required: false
         type: string
 
-jobs:
-  sonarcloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Log code checkout
-        uses: ./.github/actions/send-logs
-        with:
-              runId: ${{ github.event.inputs.runId }}
-              message: "Code checkout step completed successfully. Repository: ${{ github.repository }}, Branch: ${{ github.ref }}"     - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Log SonarCloud Scan Success
-        uses: ./.github/actions/send-logs
-        with:
-          runId: ${{ github.event.inputs.runId }}
-          message: "SonarCloud Scan step completed successfully."
+  jobs:
+    sonarcloud:
+      name: SonarCloud
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        - name: Log code checkout
+          if: ${{ github.event.inputs.runId != '' }}
+          uses: ./.github/actions/send-logs
+          with:
+            runId: ${{ github.event.inputs.runId }}
+            message: "Code checkout step completed successfully. Repository: ${{ github.repository }}, Branch: ${{ github.ref }}"
+        - name: SonarCloud Scan
+          uses: SonarSource/sonarcloud-github-action@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        - name: Log SonarCloud Scan Success
+          if: ${{ github.event.inputs.runId != '' }}
+          uses: ./.github/actions/send-logs
+          with:
+            runId: ${{ github.event.inputs.runId }}
+            message: "SonarCloud Scan step completed successfully."
